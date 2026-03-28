@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { Order } from "./models/Order.js";
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);1
+
 dotenv.config();
 
 mongoose
@@ -15,7 +17,7 @@ mongoose
 const app = express();
 app.use(cors());
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 
 app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
   const sig = req.headers["stripe-signature"];
@@ -100,6 +102,7 @@ app.post("/checkout", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server running on http://localhost:5000");
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
