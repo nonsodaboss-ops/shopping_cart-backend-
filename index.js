@@ -9,6 +9,16 @@ import { Order } from "./models/Order.js";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error("Missing STRIPE_SECRET_KEY");
+}
+if (!process.env.MONGODB_URI) {
+  throw new Error("Missing MONGODB_URI");
+}
+if (!process.env.STRIPE_WEBHOOK_SECRET) {
+  console.warn("⚠️ STRIPE_WEBHOOK_SECRET not set (webhooks may fail)");
+}
+
 mongoose
   .connect(process.env.MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
@@ -93,7 +103,7 @@ app.post("/checkout", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: "https://azshoppingcart.netlify.app//success",
+      success_url: "https://azshoppingcart.netlify.app/success",
       cancel_url: "https://azshoppingcart.netlify.app/cancel",
     });
     res.json({ url: session.url });
