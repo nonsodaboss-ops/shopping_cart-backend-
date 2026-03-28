@@ -1,13 +1,13 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import express from "express";
 import cors from "cors";
 import Stripe from "stripe";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { Order } from "./models/Order.js";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);1
-
-dotenv.config();
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 mongoose
   .connect(process.env.MONGODB_URI)
@@ -93,8 +93,8 @@ app.post("/checkout", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: "http://localhost:5173/success",
-      cancel_url: "http://localhost:5173/cancel",
+      success_url: "https://azshoppingcart.netlify.app//success",
+      cancel_url: "https://azshoppingcart.netlify.app/cancel",
     });
     res.json({ url: session.url });
   } catch (error) {
